@@ -45,11 +45,12 @@ def VectorsToAngles(data : list):
     vec1 = Vector3D(data[5], data[6])
     vec2 = Vector3D(data[7], data[6])
     
-    fp2 = Bone("FP_2", vec1, vec0)
-    fm2 = Bone("FM_2", vec2, vec1)
+    fp2 = Bone("FP_2", data[5], data[6], data[5], data[0])
+    fm2 = Bone("FM_2", data[7], data[6], data[5], data[6])
     
     fp2.VAngle()
-    fm2.VAngle()
+    fp2.HAngle()
+    
     
 
 def plot3D(data : list):    
