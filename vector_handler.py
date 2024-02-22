@@ -1,5 +1,7 @@
 import math
 
+debug = False
+
 class Vector3D:
     def __init__(self, fPoint : tuple, sPoint : tuple):
         self.x = sPoint[0] - fPoint[0]
@@ -8,9 +10,9 @@ class Vector3D:
 
 
 class Bone:
-    def __init__(self, boneName : str, boneVec0 : tuple, boneVec1 : tuple, refVec0: tuple, refVec1 : tuple):
-        self.boneVec : Vector3D = Vector3D(boneVec0, boneVec1)
-        self.refVec : Vector3D = Vector3D(refVec0, refVec1)
+    def __init__(self, boneName : str, boneVec : Vector3D, refVec: Vector3D):
+        self.boneVec : Vector3D = boneVec
+        self.refVec : Vector3D = refVec
         self.name : str = boneName
         self.Vangle : float
         self.Hangle : float
@@ -26,7 +28,8 @@ class Bone:
         bMag = math.sqrt(math.fabs(bCatSqr))
         
         # calculo do angulo
-        print(axb/(aMag * bMag))   
+        if debug:
+            print(axb/(aMag * bMag))   
         if (aMag * bMag) != 0:
             
             frac = axb/(aMag * bMag)
@@ -37,13 +40,13 @@ class Bone:
 
             radAngle = math.acos(frac)
             angleAB = math.degrees(radAngle)
-            self.VAngle = angleAB
-            
-            print(self.name)
-            print(f"escalar {axb}")
-            print(f"magnetude {aMag}")
-            print(f"cos angulo V {axb/(aMag * bMag)}")        
-            print(f"angulo V {angleAB}")
+            self.Vangle = angleAB
+            if debug:
+                print(self.name)
+                print(f"escalar {axb}")
+                print(f"magnetude {aMag}")
+                print(f"cos angulo V {axb/(aMag * bMag)}")        
+                print(f"angulo V {angleAB}")
         
 
     def VAngle(self):
@@ -67,13 +70,13 @@ class Bone:
                 
             radAngle = math.acos(frac)
             angleAB = math.degrees(radAngle)
-            self.VAngle = angleAB
-            
-            print(self.name)
-            print(f"escalar {axb}")
-            print(f"magnetude {aMag}")
-            print(f"cos angulo V {axb/(aMag * bMag)}")        
-            print(f"angulo V {angleAB}")
+            self.Hangle = angleAB
+            if debug:
+                print(self.name)
+                print(f"escalar {axb}")
+                print(f"magnetude {aMag}")
+                print(f"cos angulo V {axb/(aMag * bMag)}")        
+                print(f"angulo V {angleAB}")
             return angleAB
         
 
@@ -98,13 +101,13 @@ class Bone:
                 
             radAngle = math.acos(frac)
             angleAB = math.degrees(radAngle)
-            self.VAngle = angleAB
-            
-            print(self.name)
-            print(f"escalar {axb}")
-            print(f"magnetude {aMag}")
-            print(f"cos angulo H {axb/(aMag * bMag)}")        
-            print(f"angulo H {angleAB}")
+            self.Hangle = angleAB
+            if debug:
+                print(self.name)
+                print(f"escalar {axb}")
+                print(f"magnetude {aMag}")
+                print(f"cos angulo H {axb/(aMag * bMag)}")        
+                print(f"angulo H {angleAB}")
             return angleAB
     
         
