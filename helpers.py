@@ -4,13 +4,17 @@ import os
 import matplotlib.pyplot as plt
 from vector_handler import *
 from pyfirmata import Arduino, util
-import time
+from time import sleep
+import serial
+import serial.tools.list_ports
+
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 
-porta = "COM3"
-#board = Arduino(porta)
+porta = None
+board = None
+
 
 lastPoints = []
 
@@ -103,24 +107,81 @@ def VectorsToAngles(data : list):
     
     return anglesDict
 
-'''def ArduinoInit():
+def ArduinoInit():
     if not board:
         return
-    time.sleep(5)
     it = util.Iterator(board)
     it.start()
-    pass'''
+    sleep(2)
+    
+    #void setup:
+    global builtinled
+    builtinled = board.get_pin("d:13:o")
+    
 
-'''def executeArduino(processedData : dict):
+    
+    pass
+
+def tryArduinoConect(port):
+    try:
+        global board
+        board = Arduino(port)
+        return True
+    except:
+        return False
+
+def selectCom():
     while True:
-        board.digital[13].write(1)
-        time.sleep(100)
-        board.digital[13].write(0)
-        time.sleep(100)
+        com_port = input("Digite a porta COM: ").upper()
+        if tryArduinoConect(com_port):
+            return com_port
+        else:
+            print(f"Erro ao conectar-se à porta {com_port}. Tente novamente.")
 
-    pass'''
+def executeArduino(processedData : dict):
+    pass
 
+def blink():
+    print("blink")
+    builtinled.write(1)
+    sleep(1)
+    builtinled.write(0)
+    sleep(1)
+    pass
 
+def comPorts():
+    ports = serial.tools.list_ports.comports()
+    
+    if not ports:
+        print("Nenhuma porta COM encontrada.")
+    else:
+        print("Portas COM disponíveis:")
+        for port in ports:
+            print(f"    {port.device} ---> {port.description}")
+
+def programInit():
+    sleep(1)
+    print("Iniciando Programa")
+    sleep(1)
+    print("Bem vindo!")
+    sleep(0.5)
+    print("Escolha em qual porta onde o dispositivo esteja conectado.")
+    
+    comPorts()
+    selectCom()
+    
+    ArduinoInit()
+
+    print("conectado!")
+    sleep(2)
+    print('Camera ligando em')
+    print("3")
+    sleep(1)
+    print("2")
+    sleep(1)
+    print("1")
+    sleep(1)
+        
 def plot3D(data : list):    
     if not data:
         return

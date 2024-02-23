@@ -1,16 +1,18 @@
 import helpers as hp
 import os
 
-debugMode = False
+debugMode = True
 
 handPoints = []
 
 def main():
     if debugMode:
         print("Debug Mode Started")
-        #hp.ArduinoInit()
-        #hp.executeArduino()
-    
+        hp.programInit()
+        while True:
+            hp.blink()
+        
+        
     else:
         while True:
             handPoints = hp.movementCapture()
