@@ -7,20 +7,24 @@ handPoints = []
 
 def main():
     if debugMode:
-        print("Debug Mode Started")
         hp.programInit()
         while True:
-            hp.blink()
-        
+            hp.executeArduino({})
         
     else:
+        hp.programInit()
         while True:
             handPoints = hp.movementCapture()
             #hp.plot3D(handPoints)
             os.system('cls')
             hp.VectorsToAngles(handPoints)
-            print(handPoints)
-                
+            try:
+                print(handPoints[8])
+            except:
+                pass
+            #print(handPoints)
+            hp.blink()
+
 
 if __name__ == "__main__":
     main()

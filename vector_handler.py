@@ -109,6 +109,4 @@ class Bone:
                 print(f"cos angulo H {axb/(aMag * bMag)}")        
                 print(f"angulo H {angleAB}")
             return angleAB
-    
-        
-        
+

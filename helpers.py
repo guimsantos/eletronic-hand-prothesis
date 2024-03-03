@@ -3,7 +3,7 @@ import mediapipe as mp
 import os
 import matplotlib.pyplot as plt
 from vector_handler import *
-from pyfirmata import Arduino, util
+from pyfirmata import Arduino, util, SERVO
 from time import sleep
 import serial
 import serial.tools.list_ports
@@ -107,21 +107,6 @@ def VectorsToAngles(data : list):
     
     return anglesDict
 
-def ArduinoInit():
-    if not board:
-        return
-    it = util.Iterator(board)
-    it.start()
-    sleep(2)
-    
-    #void setup:
-    global builtinled
-    builtinled = board.get_pin("d:13:o")
-    
-
-    
-    pass
-
 def tryArduinoConect(port):
     try:
         global board
@@ -130,6 +115,39 @@ def tryArduinoConect(port):
     except:
         return False
 
+def ArduinoInit():
+    if not board:
+        return
+    it = util.Iterator(board)
+    it.start()
+    sleep(2)
+    
+    #void setup:
+    global builtinled; builtinled = board.get_pin("d:13:o")
+
+    board.digital[9].mode = SERVO
+    
+    pass
+
+def executeArduino(processedData : dict):
+    sleep(1)
+    rotateServo(9, 50)
+    sleep(1)
+    rotateServo(9, 100)
+    pass
+
+def rotateServo(pin, angle):
+    board.digital[pin].write(angle)
+    sleep(0.015)
+
+def blink():
+    print("blink")
+    builtinled.write(1)
+    sleep(.2)
+    builtinled.write(0)
+    sleep(.2)
+    pass
+
 def selectCom():
     while True:
         com_port = input("Digite a porta COM: ").upper()
@@ -137,17 +155,6 @@ def selectCom():
             return com_port
         else:
             print(f"Erro ao conectar-se à porta {com_port}. Tente novamente.")
-
-def executeArduino(processedData : dict):
-    pass
-
-def blink():
-    print("blink")
-    builtinled.write(1)
-    sleep(1)
-    builtinled.write(0)
-    sleep(1)
-    pass
 
 def comPorts():
     ports = serial.tools.list_ports.comports()
@@ -199,4 +206,5 @@ def plot3D(data : list):
     print(data)
     plt.draw()
     plt.pause(0.2)
-        
+
+
