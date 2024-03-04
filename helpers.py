@@ -125,16 +125,29 @@ def ArduinoInit():
     #void setup:
     global builtinled; builtinled = board.get_pin("d:13:o")
 
-    board.digital[9].mode = SERVO
-    
+    board.digital[2].mode = SERVO
+    board.digital[3].mode = SERVO
+    board.digital[4].mode = SERVO
     pass
 
-def executeArduino(processedData : dict):
-    sleep(1)
-    rotateServo(9, 50)
-    sleep(1)
-    rotateServo(9, 100)
-    pass
+def executeArduino(anglesList : dict):
+    #inserir
+    #if not anglesList -> seta as posiçoes para default
+    #depois de um timer (pesquisar como fazer)
+    if not anglesList:
+        return
+    try:
+        for angle in anglesList:
+            if anglesList[angle] <= 0:
+                anglesList[angle] = 0
+            elif anglesList[angle] >= 180:
+                anglesList[angle] = 180
+        rotateServo(2, anglesList["2/z"])
+        rotateServo(3, anglesList["3/z"])
+        rotateServo(4, anglesList["4/z"])
+    except:
+        pass
+    
 
 def rotateServo(pin, angle):
     board.digital[pin].write(angle)

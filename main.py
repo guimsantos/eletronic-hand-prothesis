@@ -1,7 +1,7 @@
 import helpers as hp
 import os
 
-debugMode = True
+debugMode = False
 
 handPoints = []
 
@@ -17,13 +17,8 @@ def main():
             handPoints = hp.movementCapture()
             #hp.plot3D(handPoints)
             os.system('cls')
-            hp.VectorsToAngles(handPoints)
-            try:
-                print(handPoints[8])
-            except:
-                pass
-            #print(handPoints)
-            hp.blink()
+            boneAngles = hp.VectorsToAngles(handPoints)
+            hp.executeArduino(boneAngles)
 
 
 if __name__ == "__main__":
