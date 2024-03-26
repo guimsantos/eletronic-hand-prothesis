@@ -8,6 +8,7 @@ from time import sleep
 import serial
 import serial.tools.list_ports
 
+windowName = "Controlador por imagem"
 
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
@@ -40,7 +41,7 @@ def movementCapture():
                 cx, cy, cz = int(cord.x * w), int(cord.y * h), int(cord.z * h)
                 pointsList.append((cx, cy, cz))
 
-    cv.imshow("Maozinha SENAI 2000 Pro Max", img)
+    cv.imshow(windowName, img)
     cv.waitKey(1)
     return pointsList
 
@@ -75,9 +76,12 @@ def VectorsToAngles(data : list):
     vec14_15 = Vector3D(data[14], data[15]) #anelar
     vec18_19 = Vector3D(data[18], data[19]) #minimo
     
+    # teste polegar
+    vec4_3 = Vector3D(data[4], data[3])
+    
     #polegar
-    MC1 = Bone("MC1", vec2_1, vec0_1)
-    FP1 = Bone("FP1", vec2_3, vec2_1)
+    MC1 = Bone("MC1", vec2_3, vec2_1)
+    FP1 = Bone("FP1", vec2_3, vec4_3)
     
     #indicador
     FP2 = Bone("FP2", vec6_5, vec0_5)
@@ -135,7 +139,10 @@ def executeArduino(anglesList : dict):
     #if not anglesList -> seta as posiçoes para default
     #depois de um timer (pesquisar como fazer)
     if not anglesList:
-        return
+        rotateServo(2, 180)
+        rotateServo(3, 180)
+        rotateServo(4, 180)
+        
     try:
         for angle in anglesList:
             if anglesList[angle] <= 0:
@@ -161,13 +168,16 @@ def blink():
     sleep(.2)
     pass
 
-def selectCom():
-    while True:
-        com_port = input("Digite a porta COM: ").upper()
-        if tryArduinoConect(com_port):
-            return com_port
-        else:
-            print(f"Erro ao conectar-se à porta {com_port}. Tente novamente.")
+def selectCom(defaultPort):
+    if defaultPort:
+        tryArduinoConect(defaultPort)
+    else:
+        while True:
+            com_port = input("Digite a porta COM: ").upper()
+            if tryArduinoConect(com_port):
+                return com_port
+            else:
+                print(f"Erro ao conectar-se à porta {com_port}. Tente novamente.")
 
 def comPorts():
     ports = serial.tools.list_ports.comports()
@@ -188,19 +198,14 @@ def programInit():
     print("Escolha em qual porta onde o dispositivo esteja conectado.")
     
     comPorts()
-    selectCom()
+    selectCom(None)
     
     ArduinoInit()
 
-    print("conectado!")
+    print("Conectado!")
     sleep(2)
-    print('Camera ligando em')
-    print("3")
-    sleep(1)
-    print("2")
-    sleep(1)
-    print("1")
-    sleep(1)
+    print('Ligando câmera')
+    sleep(2)
         
 def plot3D(data : list):    
     if not data:

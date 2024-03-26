@@ -1,5 +1,6 @@
 import helpers as hp
 import os
+from time import sleep
 
 debugMode = False
 
@@ -19,6 +20,7 @@ def main():
             os.system('cls')
             boneAngles = hp.VectorsToAngles(handPoints)
             hp.executeArduino(boneAngles)
+            sleep(0.05)
 
 
 if __name__ == "__main__":
